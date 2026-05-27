@@ -8,16 +8,16 @@ datasource db {
 }
 
 enum NotificationType {
-  marketing
-  transactional
-  security
+  MARKETING     @map("marketing")
+  TRANSACTIONAL @map("transactional")
+  SECURITY      @map("security")
 }
 
 enum Channel {
-  email
-  sms
-  push
-  messenger
+  EMAIL     @map("email")
+  SMS       @map("sms")
+  PUSH      @map("push")
+  MESSENGER @map("messenger")
 }
 
 enum Region {
@@ -28,8 +28,8 @@ enum Region {
 }
 
 enum PolicyAction {
-  allow
-  deny
+  ALLOW @map("allow")
+  DENY  @map("deny")
 }
 
 model DefaultPreference {
