@@ -1,17 +1,17 @@
-export enum NotificationType {
+export enum DomainNotificationType {
   MARKETING = 'marketing',
   TRANSACTIONAL = 'transactional',
   SECURITY = 'security',
 }
 
-export enum Channel {
+export enum DomainChannel {
   EMAIL = 'email',
   SMS = 'sms',
   PUSH = 'push',
   MESSENGER = 'messenger',
 }
 
-export enum Region {
+export enum DomainRegion {
   GLOBAL = 'GLOBAL',
   EU = 'EU',
   US = 'US',
