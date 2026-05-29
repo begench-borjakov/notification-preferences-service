@@ -1,13 +1,15 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
+import { AppLoggerService } from '../../common/logger/logger.service';
 import { UpdateUserPreferencesDto } from './dto/update-user-preferences.dto';
 import { UserPreferencesOverviewEntity } from './entities/user-preferences-overview.entity';
 import { PreferencesRepository } from './preferences.repository';
 
 @Injectable()
 export class PreferencesService {
-  private readonly logger = new Logger(PreferencesService.name);
-
-  constructor(private readonly preferencesRepository: PreferencesRepository) {}
+  constructor(
+    private readonly preferencesRepository: PreferencesRepository,
+    private readonly logger: AppLoggerService,
+  ) {}
 
   async getUserPreferences(userId: string): Promise<UserPreferencesOverviewEntity> {
     const [preferences, defaultPreferences, settings, quietHours] = await Promise.all([
@@ -57,7 +59,12 @@ export class PreferencesService {
       });
     }
 
-    this.logger.log(`preferences updated for userId=${userId}`);
+    this.logger.logPreferencesUpdated({
+      userId,
+      preferencesUpdated: dto.preferences?.length ?? 0,
+      settingsUpdated: dto.optionalNotificationsEnabled !== undefined,
+      quietHoursUpdated: dto.quietHours !== undefined,
+    });
 
     return this.getUserPreferences(userId);
   }
