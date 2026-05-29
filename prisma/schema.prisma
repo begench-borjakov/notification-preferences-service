@@ -1,0 +1,97 @@
+generator client {
+  provider     = "prisma-client"
+  output       = "../generated/prisma"
+  moduleFormat = "cjs"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum NotificationType {
+  MARKETING     @map("marketing")
+  TRANSACTIONAL @map("transactional")
+  SECURITY      @map("security")
+}
+
+enum Channel {
+  EMAIL     @map("email")
+  SMS       @map("sms")
+  PUSH      @map("push")
+  MESSENGER @map("messenger")
+}
+
+enum Region {
+  GLOBAL
+  EU
+  US
+  TR
+}
+
+enum PolicyAction {
+  ALLOW @map("allow")
+  DENY  @map("deny")
+}
+
+model DefaultPreference {
+  id               String           @id @default(uuid())
+  notificationType NotificationType @map("notification_type")
+  channel          Channel
+  enabled          Boolean
+  createdAt        DateTime         @default(now()) @map("created_at")
+  updatedAt        DateTime         @updatedAt @map("updated_at")
+
+  @@unique([notificationType, channel])
+  @@map("default_preferences")
+}
+
+model UserPreference {
+  id               String           @id @default(uuid())
+  userId           String           @map("user_id")
+  notificationType NotificationType @map("notification_type")
+  channel          Channel
+  enabled          Boolean
+  createdAt        DateTime         @default(now()) @map("created_at")
+  updatedAt        DateTime         @updatedAt @map("updated_at")
+
+  @@unique([userId, notificationType, channel])
+  @@map("user_preferences")
+}
+
+model UserSettings {
+  id                           String   @id @default(uuid())
+  userId                       String   @unique @map("user_id")
+  optionalNotificationsEnabled Boolean  @default(true) @map("optional_notifications_enabled")
+  createdAt                    DateTime @default(now()) @map("created_at")
+  updatedAt                    DateTime @updatedAt @map("updated_at")
+
+  @@map("user_settings")
+}
+
+model QuietHours {
+  id        String   @id @default(uuid())
+  userId    String   @unique @map("user_id")
+  enabled   Boolean
+  startTime String   @map("start_time")
+  endTime   String   @map("end_time")
+  timezone  String
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("quiet_hours")
+}
+
+model GlobalPolicy {
+  id               String           @id @default(uuid())
+  notificationType NotificationType @map("notification_type")
+  channel          Channel
+  region           Region
+  action           PolicyAction
+  reason           String?
+  enabled          Boolean
+  createdAt        DateTime         @default(now()) @map("created_at")
+  updatedAt        DateTime         @updatedAt @map("updated_at")
+
+  @@unique([notificationType, channel, region])
+  @@map("global_policies")
+}
