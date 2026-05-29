@@ -1,4 +1,5 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
+import { AppLoggerService } from '../../common/logger/logger.service';
 import {
   DomainChannel,
   DomainNotificationType,
@@ -10,9 +11,10 @@ import { PoliciesRepository } from './policies.repository';
 
 @Injectable()
 export class PoliciesService {
-  private readonly logger = new Logger(PoliciesService.name);
-
-  constructor(private readonly policiesRepository: PoliciesRepository) {}
+  constructor(
+    private readonly policiesRepository: PoliciesRepository,
+    private readonly logger: AppLoggerService,
+  ) {}
 
   async findGlobalPolicies(): Promise<GlobalPolicyEntity[]> {
     return this.policiesRepository.findGlobalPolicies();
@@ -23,16 +25,10 @@ export class PoliciesService {
     channel: DomainChannel,
     region: DomainRegion,
   ): Promise<GlobalPolicyEntity | null> {
-    return this.policiesRepository.findGlobalPolicy(
-      notificationType,
-      channel,
-      region,
-    );
+    return this.policiesRepository.findGlobalPolicy(notificationType, channel, region);
   }
 
-  async saveGlobalPolicy(
-    dto: CreateGlobalPolicyDto,
-  ): Promise<GlobalPolicyEntity> {
+  async saveGlobalPolicy(dto: CreateGlobalPolicyDto): Promise<GlobalPolicyEntity> {
     const policy = await this.policiesRepository.upsertGlobalPolicy({
       notificationType: dto.notificationType,
       channel: dto.channel,
@@ -42,9 +38,13 @@ export class PoliciesService {
       enabled: dto.enabled,
     });
 
-    this.logger.log(
-      `global policy created/updated notificationType=${dto.notificationType} channel=${dto.channel} region=${dto.region}`,
-    );
+    this.logger.logGlobalPolicySaved({
+      notificationType: dto.notificationType,
+      channel: dto.channel,
+      region: dto.region,
+      action: dto.action,
+      enabled: dto.enabled,
+    });
 
     return policy;
   }
