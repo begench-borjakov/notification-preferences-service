@@ -1,98 +1,209 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# Notification Preferences Service
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+Backend service for deciding whether a notification can be sent to a user through a specific channel, region, and time.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+The service stores:
 
-## Description
+- default notification preferences;
+- user notification preferences;
+- user quiet hours;
+- global notification policies.
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+It does not send notifications. It only returns an `allow` or `deny` decision with a short reason.
 
-## Project setup
+## Stack
+
+- TypeScript
+- Node.js
+- NestJS
+- PostgreSQL
+- Prisma
+- Jest
+
+## Setup
+
+Install dependencies:
 
 ```bash
-$ npm install
+npm install
 ```
 
-## Compile and run the project
+Create `.env`:
+
+```env
+NODE_ENV=development
+PORT=3000
+DATABASE_URL=postgresql://USER:PASSWORD@localhost:5432/notification_preferences
+```
+
+Run PostgreSQL and create the database if it does not exist:
+
+```sql
+CREATE DATABASE notification_preferences;
+```
+
+Apply migrations:
 
 ```bash
-# development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
+npx prisma migrate dev
 ```
 
-## Run tests
+Seed default preferences:
 
 ```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+npm run prisma:seed
 ```
 
-## Deployment
-
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
-
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+Start the app:
 
 ```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
+npm run start:dev
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+## Tests
 
-## Resources
+Run unit tests:
 
-Check out a few resources that may come in handy when working with NestJS:
+```bash
+npm run test
+```
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+Build check:
 
-## Support
+```bash
+npm run build
+```
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+Lint:
 
-## Stay in touch
+```bash
+npm run lint
+```
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+## API
 
-## License
+Get user preferences:
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+```http
+GET /users/:id/preferences
+```
+
+Update user preferences:
+
+```http
+POST /users/:id/preferences
+```
+
+Example body:
+
+```json
+{
+  "preferences": [
+    {
+      "notificationType": "marketing",
+      "channel": "email",
+      "enabled": false
+    }
+  ],
+  "optionalNotificationsEnabled": true,
+  "quietHours": {
+    "enabled": true,
+    "startTime": "22:00",
+    "endTime": "08:00",
+    "timezone": "Europe/Istanbul"
+  }
+}
+```
+
+Create or update global policy:
+
+```http
+POST /global-policies
+```
+
+Example body:
+
+```json
+{
+  "notificationType": "marketing",
+  "channel": "sms",
+  "region": "EU",
+  "action": "deny",
+  "reason": "marketing_sms_blocked_in_eu",
+  "enabled": true
+}
+```
+
+Evaluate notification:
+
+```http
+POST /evaluate
+```
+
+Example body:
+
+```json
+{
+  "userId": "user-1",
+  "notificationType": "marketing",
+  "channel": "sms",
+  "region": "EU",
+  "datetime": "2026-05-21T21:30:00Z"
+}
+```
+
+Example response:
+
+```json
+{
+  "decision": "deny",
+  "reason": "blocked_by_global_policy"
+}
+```
+
+## Architecture
+
+The project uses a layered NestJS structure:
+
+```text
+Controller -> Service -> Repository -> Prisma/PostgreSQL
+```
+
+Rules:
+
+- controllers handle HTTP and return RTOs;
+- services contain business logic and return domain entities;
+- repositories talk to Prisma and return domain entities;
+- Prisma models are not returned directly from controllers;
+- mappers convert Prisma objects to entities and entities to RTOs.
+
+Main modules:
+
+- `PreferencesModule` handles user preferences, settings, quiet hours, and default preferences.
+- `PoliciesModule` handles global notification policies.
+- `EvaluationModule` contains the final decision logic and uses `PreferencesService` and `PoliciesService`.
+
+Evaluation order:
+
+1. Global deny policy
+2. User preference
+3. Default preference
+4. User optional notifications disabled
+5. Quiet hours
+6. Allow
+
+Quiet hours are evaluated with timezone support using Luxon.
+
+## Production Improvements
+
+If this service were prepared for production, the next steps would be:
+
+- authentication and authorization for API access;
+- admin protection for global policy endpoints;
+- Docker Compose for PostgreSQL and app startup;
+- OpenAPI/Swagger documentation;
+- structured JSON logging;
+- metrics for evaluation allow/deny counts and latency;
+- CI pipeline for lint, build, tests, and migrations;
+- integration tests against a real PostgreSQL test database;
+- audit logs for preference and policy changes.
