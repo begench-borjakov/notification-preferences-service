@@ -40,12 +40,9 @@ export const toPrismaNotificationType = (
   notificationType: DomainNotificationType,
 ): NotificationType => notificationTypeMap[notificationType];
 
-export const toPrismaChannel = (channel: DomainChannel): Channel =>
-  channelMap[channel];
+export const toPrismaChannel = (channel: DomainChannel): Channel => channelMap[channel];
 
-export const toPrismaRegion = (region: DomainRegion): Region =>
-  regionMap[region];
+export const toPrismaRegion = (region: DomainRegion): Region => regionMap[region];
 
-export const toPrismaPolicyAction = (
-  action: DomainPolicyAction,
-): PolicyAction => policyActionMap[action];
+export const toPrismaPolicyAction = (action: DomainPolicyAction): PolicyAction =>
+  policyActionMap[action];

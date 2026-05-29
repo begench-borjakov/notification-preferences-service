@@ -1,10 +1,4 @@
-import {
-  IsBoolean,
-  IsEnum,
-  IsNotEmpty,
-  IsOptional,
-  IsString,
-} from 'class-validator';
+import { IsBoolean, IsEnum, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 import {
   DomainChannel,
   DomainNotificationType,

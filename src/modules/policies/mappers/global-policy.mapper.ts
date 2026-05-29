@@ -7,10 +7,7 @@ import {
 import { GlobalPolicyEntity } from '../entities/global-policy.entity';
 import { DomainPolicyAction } from '../types/policy.types';
 
-const notificationTypeMap: Record<
-  GlobalPolicy['notificationType'],
-  DomainNotificationType
-> = {
+const notificationTypeMap: Record<GlobalPolicy['notificationType'], DomainNotificationType> = {
   MARKETING: DomainNotificationType.MARKETING,
   TRANSACTIONAL: DomainNotificationType.TRANSACTIONAL,
   SECURITY: DomainNotificationType.SECURITY,
@@ -35,9 +32,7 @@ const policyActionMap: Record<GlobalPolicy['action'], DomainPolicyAction> = {
   DENY: DomainPolicyAction.DENY,
 };
 
-export const toGlobalPolicyEntity = (
-  policy: GlobalPolicy,
-): GlobalPolicyEntity => ({
+export const toGlobalPolicyEntity = (policy: GlobalPolicy): GlobalPolicyEntity => ({
   id: policy.id,
   notificationType: notificationTypeMap[policy.notificationType],
   channel: channelMap[policy.channel],

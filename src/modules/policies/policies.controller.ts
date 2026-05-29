@@ -16,9 +16,7 @@ export class PoliciesController {
   }
 
   @Post()
-  async saveGlobalPolicy(
-    @Body() dto: CreateGlobalPolicyDto,
-  ): Promise<GlobalPolicyRto> {
+  async saveGlobalPolicy(@Body() dto: CreateGlobalPolicyDto): Promise<GlobalPolicyRto> {
     const policy = await this.policiesService.saveGlobalPolicy(dto);
 
     return toGlobalPolicyRto(policy);
